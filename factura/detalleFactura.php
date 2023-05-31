@@ -1,6 +1,6 @@
 <?php
-require_once('config.php');
-$data = new Factura();
+require_once("../config/config.php");
+$data = new FacturaDetalle();
 
 $id = $_GET['id'];
 $data -> setFacturaId($id);
@@ -14,7 +14,7 @@ if (isset($_POST['editar'])) {
     $data-> setClienteId($_POST['clienteId']);
     $data-> setFecha($_POST['fecha']);
     $data-> update();
-    echo "<script>alert('Datos editados exitosamente');document.location='index.php'</script>";
+    echo "<script>alert('Datos editados exitosamente');document.location='facturas.php'</script>";
 
 }
 ?>
@@ -31,7 +31,7 @@ if (isset($_POST['editar'])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="css/profesores.css">
+  <link rel="stylesheet" href="../css/profesores.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,800;1,400&display=swap"
     rel="stylesheet">
 </head>
@@ -44,7 +44,7 @@ if (isset($_POST['editar'])) {
         <ul class="navbar-nav  mb-2 mb-lg-0 d-flex justify-content-start ">
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-person-square text-white"></i>
-            <a class="nav-link active texcolor3" aria-current="page" href="clientes.php" style="cursor:pointer;">Listar Clientes</a>
+            <a class="nav-link active texcolor3" aria-current="page" href="facturas.php" style="cursor:pointer;">Listar Facturas</a>
           </li>
 
           <li class="nav-item dropdown" style="cursor:pointer;">
@@ -61,7 +61,7 @@ if (isset($_POST['editar'])) {
     <div class="sub-menu d-flex justify-content-between menu-cuenta " >
 
       <div class="divcueta border-bottom ">
-        <img src="img/logo.png" alt="" srcset="" class="cuenta2">
+        <img src="../img/logo.png" alt="" srcset="" class="cuenta2">
         <div class="ps-2">
           <h5 class="texcolor3">SuperMarket</h5>
           <h6 class="texcosize">Bienvenido</h6>
@@ -74,46 +74,36 @@ if (isset($_POST['editar'])) {
       </div>
     </div>
     
-    <h2 class="m-2 texcolor3">Cliente a Editar</h2>
+    <h2 class="m-2 texcolor3">Detalle factura</h2>
     <div class="menuTabla contenedor2">
-        <form class="col d-flex flex-wrap" action=""  method="post">
-                <div class="mb-1 col-12">
-                <label for="empleadoId" class="form-label texcolor3">Empleado Id</label>
-                <input 
-                  type="number"
-                  id="empleadoId"
-                  name="empleadoId"
-                  class="form-control"  
-                  value="<?php echo $val['empleadoId'] ?>"
-                />
-              </div>
-
-              <div class="mb-1 col-12">
-                <label for="clienteId" class="form-label texcolor3">Cliente Id</label>
-                <input 
-                  type="number"
-                  id="clienteId"
-                  name="clienteId"
-                  class="form-control"  
-                  value="<?php echo $val['clienteId'] ?>"
-                />
-              </div>
-
-              <div class="mb-1 col-12">
-                <label for="direfechaccion" class="form-label texcolor3">Fecha</label>
-                <input 
-                  type="date"
-                  id="fecha"
-                  name="fecha"
-                  class="form-control"  
-                  value="<?php echo $val['fecha'] ?>"
-                />
-              </div>
-
-              <div class=" col-12 m-2">
-                <input type="submit" class="btn btn-primary" value="UPDATE" name="editar"/>
-              </div>
-        </form>  
+    <div id="div3" class="conta">
+          <table class="table">
+            <thead class="menu-busqueda">
+                  <tr>
+                      <th scope="col">FACTURA ID</th>
+                      <th scope="col">PRODUCTO</th>
+                      <th scope="col">CANTIDAD</th>
+                      <th scope="col">PRECIO VENTA</th>
+                      <th scope="col">DETALLES</th>
+                  </tr>
+            </thead>
+                  <tbody class="table-group-divider">
+                  <?php
+                    $nombreProducto = $data->nombreProducto($val['productoId']);
+                  ?>
+                  <tr>
+                    <td><?php echo $val['facturaId']?></td>
+                    <td><?php echo $nombreProducto?></td>
+                    <td><?php echo $val['cantidad']?></td>
+                    <td><?php echo $val['precioVenta']?></td>
+                    <td>
+                      <a class="btn btn-danger" href="borrarDetalleFactura.php?id=<?=$val['facturaId']?>&req=delete">Borrar</a>
+                      <a class="btn btn-warning" href="editarDetalleFactura.php?id=<?=$val['facturaId']?>">Editar</a>
+                    </td>
+                  </tr>
+                  </tbody>
+          </table>
+        </div>  
     <div id="charts1" class="charts"> </div>
         
   </div>

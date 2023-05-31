@@ -116,3 +116,30 @@ FROM proveedores
 SELECT empleados.nombre
 FROM empleados
     INNER JOIN facturas ON empleados.empleadoId = facturas.empleadoId;
+
+SELECT categoriaId, nombre FROM categorias;
+
+ALTER TABLE clientes ADD nombre VARCHAR(30);
+
+SELECT clienteId, nombre FROM clientes;
+
+CREATE TABLE
+    usuarios(
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        empleadoId INT NOT NULL,
+        email VARCHAR(80) NOT NULL UNIQUE,
+        username VARCHAR(64) NOT NULL,
+        password VARCHAR(72) not NULL,
+        tipoUsuario VARCHAR(20) NOT NULL,
+        Foreign Key (empleadoId) REFERENCES empleados(empleadoId)
+    );
+
+SELECT username, password FROM usuarios;
+
+SELECT MAX(facturaId) AS ultimoId FROM facturas;
+
+SELECT productos.nombre
+FROM productos
+    INNER JOIN facturaDetalle ON productos.productoId = facturaDetalle.productoId
+WHERE
+    productos.productoId = 20 ;

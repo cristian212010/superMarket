@@ -1,23 +1,23 @@
 <?php
 if (isset($_POST['guardar'])) {
-    require_once("config.php");
+    require_once("config/config.php");
 
     $categoria = new Categoria();
 
-    $categoria-> setNombre($_POST['nombre']);
+    $categoria-> setNombre($_POST['nombre1']);
     $categoria-> setDescripcion($_POST['descripcion']);
 
     $categoria-> insertData();
 
-    echo "<script>alert('Los datos fueron guardados satisfactoriamente');document.location='index.php'</script>";
+    echo "<script>alert('Los datos fueron guardados satisfactoriamente');document.location='categoria/index.php'</script>";
 }
 if (isset($_POST['guardarProducto'])) {
-    require_once("config.php");
+    require_once("config/config.php");
 
     $producto = new Producto();
 
     $producto-> setcategoriaId($_POST['categoriaId']);
-    $producto-> setNombre($_POST['nombre']);
+    $producto-> setNombre($_POST['nombre2']);
     $producto-> setStock($_POST['stock']);
     $producto-> setUnidadesPedidas($_POST['unidadesPedidas']);
     $producto-> setProveedorId($_POST['proveedorId']);
@@ -26,35 +26,39 @@ if (isset($_POST['guardarProducto'])) {
 
     $producto-> insertData();
 
-    echo "<script>alert('Los datos fueron guardados satisfactoriamente');document.location='index.php'</script>";
+    echo "<script>alert('Los datos fueron guardados satisfactoriamente');document.location='producto/productos.php'</script>";
 }
 if (isset($_POST['guardarClientes'])) {
-    require_once("config.php");
+    require_once("config/config.php");
+
 
     $cliente = new Cliente();
 
-    $cliente-> setCelular($_POST['celular']);
+    $cliente-> setNombre($_POST['nombre5']);
+    $cliente-> setCelular($_POST['celular1']);
     $cliente-> setCompañia($_POST['compañia']);
 
     $cliente-> insertData();
 
-    echo "<script>alert('Los datos fueron guardados satisfactoriamente');document.location='index.php'</script>";
+    echo "<script>alert('Los datos fueron guardados satisfactoriamente');document.location='cliente/clientes.php'</script>";
 }
 if (isset($_POST['guardarEmpleados'])) {
-    require_once("config.php");
+    require_once("config/config.php");
 
-    $cliente = new Empleado();
 
-    $cliente-> setNombre($_POST['nombre']);
-    $cliente-> setCelular($_POST['celular']);
-    $cliente-> setDireccion($_POST['direccion']);
+    $empleado = new Empleado();
 
-    $cliente-> insertData();
+    $empleado-> setNombre($_POST['nombre3']);
+    $empleado-> setCelular($_POST['celular']);
+    $empleado-> setDireccion($_POST['direccion']);
 
-    echo "<script>alert('Los datos fueron guardados satisfactoriamente');document.location='index.php'</script>";
+    $empleado-> insertData();
+
+    echo "<script>alert('Los datos fueron guardados satisfactoriamente');document.location='empleado/empleados.php'</script>";
 }
 if (isset($_POST['guardarFacturas'])) {
-    require_once("config.php");
+    require_once("config/config.php");
+
 
     $factura = new Factura();
 
@@ -64,19 +68,44 @@ if (isset($_POST['guardarFacturas'])) {
 
     $factura-> insertData();
 
-    echo "<script>alert('Los datos fueron guardados satisfactoriamente');document.location='index.php'</script>";
+    $idFactura = $factura->ultimoId();
+    $detalleFactura = new FacturaDetalle();
+    $detalleFactura->setFacturaId($idFactura);
+    $detalleFactura->setProductoId($_POST['productoId']);
+    $detalleFactura->setCantidad($_POST['cantidad']);
+    $detalleFactura->setPrecioVenta($_POST['precioVenta']);
+    $detalleFactura->insertData();
+
+
+    echo "<script>alert('Los datos fueron guardados satisfactoriamente');document.location='factura/facturas.php'</script>";
 }
 if (isset($_POST['guardarProveedor'])) {
-    require_once("config.php");
+    require_once("config/config.php");
+
 
     $factura = new Proveedor();
 
-    $factura-> setNombre($_POST['nombre']);
+    $factura-> setNombre($_POST['nombre4']);
     $factura-> setTelefono($_POST['telefono']);
     $factura-> setCiudad($_POST['ciudad']);
 
     $factura-> insertData();
 
-    echo "<script>alert('Los datos fueron guardados satisfactoriamente');document.location='index.php'</script>";
+    echo "<script>alert('Los datos fueron guardados satisfactoriamente');document.location='proveedor/proveedores.php'</script>";
+}
+if (isset($_POST["registrarse"])) {
+    require_once("config/config.php");
+
+    $usuario = new Usuario();
+
+    $usuario -> setEmpleadoId($_POST["empleadoId"]);
+    $usuario -> setEmail($_POST["email"]);
+    $usuario -> setUsername($_POST["username"]);
+    $usuario -> setPassword($_POST["password"]);
+    $usuario -> setTipoUsuario($_POST["tipoUsuario"]);
+
+    $usuario -> insertData();
+
+    echo "<script> alert('El registro se realizo satisfactoriamente');document.location ='Login/loginRegister.php'</script>";
 }
 ?>

@@ -1,8 +1,26 @@
 <?php
-require_once("config.php");
-
-$data = new Producto();
+require_once("../config/config.php");
+$data = new Proveedor();
 $all = $data->selectAll();
+
+//select Productos
+$productos = new Producto();
+
+//select Facturas
+$facturas = new Factura();
+
+session_start();
+//verificacion
+if (!$_SESSION['id']) {
+  header('Location: ../Login/loginRegister.php');
+  exit();
+}
+//Cerrar sesion
+if (isset($_POST['cerrarSesion'])) {
+  unset($_SESSION['id']);
+  header('Location: ../Login/loginRegister.php');
+  exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -17,7 +35,7 @@ $all = $data->selectAll();
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="css/profesores.css">
+  <link rel="stylesheet" href="../css/profesores.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,800;1,400&display=swap"
     rel="stylesheet">
 </head>
@@ -28,9 +46,9 @@ $all = $data->selectAll();
       <!-- menu -->
       <div class="">
         <ul class="navbar-nav  mb-2 mb-lg-0 d-flex justify-content-start ">
-          <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
+        <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-person-square text-white"></i>
-            <a class="nav-link active texcolor3" aria-current="page" href="index.php" style="cursor:pointer;">Listar Categoria</a>
+            <a class="nav-link active texcolor3" aria-current="page" href="../categoria/index.php" style="cursor:pointer;">Listar Categoria</a>
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-journal-plus text-white"></i>
@@ -39,7 +57,7 @@ $all = $data->selectAll();
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-person-square text-white"></i>
-            <a class="nav-link active texcolor3" aria-current="page" href="productos.php" style="cursor:pointer;">Listar Productos</a>
+            <a class="nav-link active texcolor3" aria-current="page" href="../producto/productos.php" style="cursor:pointer;">Listar Productos</a>
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-journal-plus text-white"></i>
@@ -48,39 +66,44 @@ $all = $data->selectAll();
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-person-square text-white"></i>
-            <a class="nav-link active texcolor3" aria-current="page" href="clientes.php" style="cursor:pointer;">Listar Clientes</a>
+            <a class="nav-link active texcolor3" aria-current="page" href="../cliente/clientes.php" style="cursor:pointer;">Listar Clientes</a>
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-journal-plus text-white"></i>
             <a class="nav-link texcolor3" type="submit" data-bs-toggle="modal"
-            data-bs-target="#registerCamper" href="#" style="cursor:pointer;">Crear Clientes</a>
+            data-bs-target="#registrarClientes" href="#" style="cursor:pointer;">Crear Clientes</a>
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-person-square text-white"></i>
-            <a class="nav-link active texcolor3" aria-current="page" href="empleados.php" style="cursor:pointer;">Listar Empleados</a>
+            <a class="nav-link active texcolor3" aria-current="page" href="../empleado/empleados.php" style="cursor:pointer;">Listar Empleados</a>
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-journal-plus text-white"></i>
             <a class="nav-link texcolor3" type="submit" data-bs-toggle="modal"
-            data-bs-target="#registerCamper" href="#" style="cursor:pointer;">Crear Empleados</a>
+            data-bs-target="#registrarEmpleado" href="#" style="cursor:pointer;">Crear Empleados</a>
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-person-square text-white"></i>
-            <a class="nav-link active texcolor3" aria-current="page" href="facturas.php" style="cursor:pointer;">Listar Facturas</a>
+            <a class="nav-link active texcolor3" aria-current="page" href="../factura/facturas.php" style="cursor:pointer;">Listar Facturas</a>
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-journal-plus text-white"></i>
             <a class="nav-link texcolor3" type="submit" data-bs-toggle="modal"
-            data-bs-target="#registerCamper" href="#" style="cursor:pointer;">Crear Facturas</a>
+            data-bs-target="#registrarFacturas" href="#" style="cursor:pointer;">Crear Facturas</a>
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-person-square text-white"></i>
-            <a class="nav-link active texcolor3" aria-current="page" href="index.html" style="cursor:pointer;">Listar Proveedores</a>
+            <a class="nav-link active texcolor3" aria-current="page" href="../proveedor/proveedores.php" style="cursor:pointer;">Listar Proveedores</a>
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-journal-plus text-white"></i>
             <a class="nav-link texcolor3" type="submit" data-bs-toggle="modal"
-            data-bs-target="#registerCamper" href="#" style="cursor:pointer;">Crear Proveedor</a>
+            data-bs-target="#registrarProveedor" href="#" style="cursor:pointer;">Crear Proveedor</a>
+          </li>
+          <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
+            <form method="post" action="">
+              <input type="submit" class="btn btn-light" value="Cerrar Sesión" name="cerrarSesion"/>
+            </form>
           </li>
 
           <li class="nav-item dropdown" style="cursor:pointer;">
@@ -99,10 +122,10 @@ $all = $data->selectAll();
         <h1 class="modal-title fs-5 headerr" id="exampleModalLabel">Registrar nueva categoria</h1>
       </div>
       <div class="modal-body">
-        <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
+        <form id="formulario" class="row g-3" action="../registrar.php"  method="POST">
           <div class="col-md-12">
             <label for="nombre" class="form-label headerr">Nombre</label>
-            <input type="text" class="form-control" id="nombre" name="nombre">
+            <input type="text" class="form-control" id="nombre" name="nombre1">
           </div> 
           <div class="col-md-12">
             <label for="descripcion" class="form-label headerr">Descripcion</label>
@@ -127,8 +150,18 @@ $all = $data->selectAll();
         <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
           <div class="col-md-12">
             <label for="categoriaId" class="form-label headerr">Categoria ID</label>
-            <input type="number" class="form-control" id="categoriaId" name="categoriaId">
-          </div> 
+            <select class="col-md-12" name="categoriaId" id="">
+              <option value="">seleccione categoria</option>
+              <?php
+                $categorias = $productos->selectCategorias();
+                foreach ($categorias as $categoria) {
+                  $categoriaId = $categoria['categoriaId'];
+                  $categoriaNombre = $categoria['nombre'];
+                  echo "<option value='" . intval($categoriaId) . "'>$categoriaNombre</option>";
+                }
+              ?>
+            </select>
+          </div>
           <div class="col-md-12">
             <label for="precioUnitario" class="form-label headerr">Precio unitario</label>
             <input type="number" class="form-control" id="precioUnitario" name="precioUnitario">
@@ -143,15 +176,25 @@ $all = $data->selectAll();
           </div> 
           <div class="col-md-12">
             <label for="proveedorId" class="form-label headerr">Proveedor ID</label>
-            <input type="number" class="form-control" id="proveedorId" name="proveedorId">
-          </div> 
+            <select class="col-md-12" name="proveedorId" id="">
+              <option value="">seleccione proveedor</option>
+              <?php
+                $allProveedores = $productos->selectProveedores();
+                foreach ($allProveedores as $allProveedores) {
+                  $proveedorId = $allProveedores['proveedorId'];
+                  $proveedorNombre = $allProveedores['nombre'];
+                  echo "<option value='" . intval($proveedorId) . "'>$proveedorNombre</option>";
+                }
+              ?>
+            </select>
+          </div>
           <div class="col-md-12">
             <label for="descontinuado" class="form-label headerr">Descontinuado</label>
             <input type="text" class="form-control" id="descontinuado" name="descontinuado">
           </div> 
           <div class="col-md-12">
             <label for="nombre" class="form-label headerr">Nombre</label>
-            <input type="text" class="form-control" id="nombre" name="nombre">
+            <input type="text" class="form-control" id="nombre" name="nombre2">
           </div>      
       </div>
       <div class="modal-footer ">
@@ -171,8 +214,12 @@ $all = $data->selectAll();
       <div class="modal-body">
         <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
           <div class="col-md-12">
+            <label for="nombre5" class="form-label headerr">Nombre</label>
+            <input type="text" class="form-control" id="nombre5" name="nombre5">
+          </div>  
+          <div class="col-md-12">
             <label for="celular" class="form-label headerr">Celular</label>
-            <input type="number" class="form-control" id="celular" name="celular">
+            <input type="number" class="form-control" id="celular" name="celular1">
           </div> 
           <div class="col-md-12">
             <label for="compañia" class="form-label headerr">Compañia</label>
@@ -197,7 +244,7 @@ $all = $data->selectAll();
         <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
         <div class="col-md-12">
             <label for="nombre" class="form-label headerr">Nombre</label>
-            <input type="text" class="form-control" id="nombre" name="nombre">
+            <input type="text" class="form-control" id="nombre" name="nombre3">
           </div> 
           <div class="col-md-12">
             <label for="celular" class="form-label headerr">Celular</label>
@@ -224,18 +271,60 @@ $all = $data->selectAll();
       </div>
       <div class="modal-body">
         <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
-        <div class="col-md-12">
-            <label for="empleadoId" class="form-label headerr">Empleado ID</label>
-            <input type="number" class="form-control" id="empleadoId" name="empleadoId">
-          </div> 
           <div class="col-md-12">
-            <label for="clienteId" class="form-label headerr">Cliente Id</label>
-            <input type="number" class="form-control" id="clienteId" name="clienteId">
-          </div> 
+            <label for="empleadoId" class="form-label headerr">Empleado ID</label>
+            <select class="col-md-12" name="empleadoId" id="">
+              <option value="">seleccione empleado</option>
+              <?php
+                $allEmpleados = $facturas->selectEmpleados();
+                foreach ($allEmpleados as $allEmpleados) {
+                  $empleadoId = $allEmpleados['empleadoId'];
+                  $empleadoNombre = $allEmpleados['nombre'];
+                  echo "<option value='" . intval($empleadoId) . "'>$empleadoNombre</option>";
+                }
+              ?>
+            </select>
+          </div>
+          <div class="col-md-12">
+            <label for="clienteId" class="form-label headerr">Cliente ID</label>
+            <select class="col-md-12" name="clienteId" id="">
+              <option value="">seleccione cliente</option>
+              <?php
+                $allClientes = $facturas->selectClientes();
+                foreach ($allClientes as $allClientes) {
+                  $clienteId = $allClientes['clienteId'];
+                  $clienteNombre = $allClientes['nombre'];
+                  echo "<option value='" . intval($clienteId) . "'>$clienteNombre</option>";
+                }
+              ?>
+            </select>
+          </div>
           <div class="col-md-12">
             <label for="fecha" class="form-label headerr">Fecha</label>
             <input type="date" class="form-control" id="fecha" name="fecha">
-          </div>     
+          </div>   
+          <div class="col-md-12">
+            <label for="productoId" class="form-label headerr">Producto ID</label>
+            <select class="col-md-12" name="productoId" id="">
+              <option value="">seleccione producto</option>
+              <?php
+                $allProductos = $facturas->selectProductos();
+                foreach ($allProductos as $allProductos) {
+                  $productoId = $allProductos['productoId'];
+                  $productoNombre = $allProductos['nombre'];
+                  echo "<option value='" . intval($productoId) . "'>$productoNombre</option>";
+                }
+              ?>
+            </select>
+          </div>  
+          <div class="col-md-12">
+            <label for="cantidad" class="form-label headerr">Cantidad</label>
+            <input type="number" class="form-control" id="cantidad" name="cantidad">
+          </div>  
+          <div class="col-md-12">
+            <label for="precioVenta" class="form-label headerr">Precio Venta</label>
+            <input type="number" class="form-control" id="precioVenta" name="precioVenta">
+          </div>  
       </div>
       <div class="modal-footer ">
         <input type="submit" class="btn btn-primary" value="guardar" name="guardarFacturas"/>
@@ -255,7 +344,7 @@ $all = $data->selectAll();
         <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
           <div class="col-md-12">
             <label for="nombre" class="form-label headerr">Nombre</label>
-            <input type="text" class="form-control" id="clinombreenteId" name="nombre">
+            <input type="text" class="form-control" id="clinombreenteId" name="nombre4">
           </div> 
           <div class="col-md-12">
             <label for="telefono" class="form-label headerr">Telefono</label>
@@ -273,12 +362,13 @@ $all = $data->selectAll();
   </div>
 </div>
 
+
   <!-- //////////////////////////////////////Campers Dynamic Table-->
   <div  class="div2 alertaAlerta" style="background-color: #233249;">
     <div class="sub-menu d-flex justify-content-between menu-cuenta " >
 
       <div class="divcueta border-bottom ">
-        <img src="img/logo.png" alt="" srcset="" class="cuenta2">
+        <img src="../img/logo.png" alt="" srcset="" class="cuenta2">
         <div class="ps-2">
           <h5 class="texcolor3">SuperMarket</h5>
           <h6 class="texcosize">Bienvenido</h6>
@@ -297,34 +387,24 @@ $all = $data->selectAll();
             <thead class="menu-busqueda">
                   <tr>
                       <th scope="col">ID</th>
-                      <th scope="col">CATEGORIA</th>
                       <th scope="col">NOMBRE</th>
-                      <th scope="col">STOCK</th>
-                      <th scope="col">UNIDADES PERDIDAS</th>
-                      <th scope="col">PROVEEDOR</th>
-                      <th scope="col">DESCONTINUADO</th>
-                      <th scope="col">PRECIO UNITARIO</th>
+                      <th scope="col">TELEFONO</th>
+                      <th scope="col">CIUDAD</th>
                       <th scope="col">DETALLES</th>
                   </tr>
             </thead>
                   <tbody class="table-group-divider">
                   <?php
                     foreach($all as $key => $value){
-                      $categoriaNombre = $data->selectNombre($value['categoriaId']);
-                      $proveedorNombre = $data->selectProveedor($value['proveedorId']);
                   ?>
                   <tr>
-                    <td><?php echo $value['productoId']?></td>
-                    <td><?php echo $categoriaNombre?></td>
+                    <td><?php echo $value['proveedorId']?></td>
                     <td><?php echo $value['nombre']?></td>
-                    <td><?php echo $value['stock']?></td>
-                    <td><?php echo $value['unidadesPedidas']?></td>
-                    <td><?php echo $proveedorNombre?></td>
-                    <td><?php echo $value['descontinuado']?></td>
-                    <td><?php echo $value['precioUnitario']?></td>
+                    <td><?php echo $value['telefono']?></td>
+                    <td><?php echo $value['ciudad']?></td>
                     <td>
-                      <a class="btn btn-danger" href="borrarProducto.php?id=<?=$value['productoId']?>&req=delete">Borrar</a>
-                      <a class="btn btn-warning" href="editarProducto.php?id=<?=$value['productoId']?>">Editar</a>
+                      <a class="btn btn-danger" href="borrarProveedor.php?id=<?=$value['proveedorId']?>&req=delete">Borrar</a>
+                      <a class="btn btn-warning" href="editarProveedor.php?id=<?=$value['proveedorId']?>">Editar</a>
                     </td>
                   </tr>
                   <?php }?>

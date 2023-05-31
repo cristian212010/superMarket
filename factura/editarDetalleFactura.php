@@ -1,24 +1,20 @@
 <?php
-require_once('config.php');
-$data = new Producto();
+require_once("../config/config.php");
+$data = new FacturaDetalle();
 
 $id = $_GET['id'];
-$data -> setProductoId($id);
+$data -> setFacturaId($id);
 
 $record = $data->selectOne();
 
 $val = $record[0];
 
 if (isset($_POST['editar'])) {
-    $data-> setcategoriaId($_POST['categoriaId']);
-    $data-> setPrecioUnitario($_POST['precioUnitario']);
-    $data-> setStock($_POST['stock']);
-    $data-> setUnidadesPedidas($_POST['unidadesPedidas']);
-    $data-> setProveedorId($_POST['proveedorId']);
-    $data-> setDescontinuado($_POST['descontinuado']);
-    $data-> setNombre($_POST['nombre']);
+    $data-> setEmpleadoId($_POST['empleadoId']);
+    $data-> setClienteId($_POST['clienteId']);
+    $data-> setFecha($_POST['fecha']);
     $data-> update();
-    echo "<script>alert('Datos editados exitosamente');document.location='index.php'</script>";
+    echo "<script>alert('Datos editados exitosamente');document.location='facturas.php'</script>";
 
 }
 ?>
@@ -35,7 +31,7 @@ if (isset($_POST['editar'])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="css/profesores.css">
+  <link rel="stylesheet" href="../css/profesores.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,800;1,400&display=swap"
     rel="stylesheet">
 </head>
@@ -48,7 +44,7 @@ if (isset($_POST['editar'])) {
         <ul class="navbar-nav  mb-2 mb-lg-0 d-flex justify-content-start ">
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-person-square text-white"></i>
-            <a class="nav-link active texcolor3" aria-current="page" href="productos.php" style="cursor:pointer;">Listar Productos</a>
+            <a class="nav-link active texcolor3" aria-current="page" href="facturas.php" style="cursor:pointer;">Listar Facturas</a>
           </li>
 
           <li class="nav-item dropdown" style="cursor:pointer;">
@@ -65,7 +61,7 @@ if (isset($_POST['editar'])) {
     <div class="sub-menu d-flex justify-content-between menu-cuenta " >
 
       <div class="divcueta border-bottom ">
-        <img src="img/logo.png" alt="" srcset="" class="cuenta2">
+        <img src="../img/logo.png" alt="" srcset="" class="cuenta2">
         <div class="ps-2">
           <h5 class="texcolor3">SuperMarket</h5>
           <h6 class="texcosize">Bienvenido</h6>
@@ -78,85 +74,50 @@ if (isset($_POST['editar'])) {
       </div>
     </div>
     
-    <h2 class="m-2 texcolor3">Producto a Editar</h2>
+    <h2 class="m-2 texcolor3">Cliente a Editar</h2>
     <div class="menuTabla contenedor2">
         <form class="col d-flex flex-wrap" action=""  method="post">
-              <div class="mb-1 col-12">
-                <label for="nombres" class="form-label texcolor3">Categoria ID</label>
+                <div class="mb-1 col-12">
+                <label for="empleadoId" class="form-label texcolor3">Factura Id</label>
                 <input 
                   type="number"
-                  id="categoriaId"
-                  name="categoriaId"
+                  id="empleadoId"
+                  name="empleadoId"
                   class="form-control"  
-                  value="<?php echo $val['categoriaId'] ?>"
-                 
+                  value="<?php echo $val['facturaId'] ?>"
                 />
               </div>
 
               <div class="mb-1 col-12">
-                <label for="direccion" class="form-label texcolor3">Precio Unitario</label>
+                <label for="clienteId" class="form-label texcolor3">Producto Id</label>
                 <input 
                   type="number"
-                  id="precioUnitario"
-                  name="precioUnitario"
+                  id="clienteId"
+                  name="clienteId"
                   class="form-control"  
-                  value="<?php echo $val['precioUnitario'] ?>"
-                 
+                  value="<?php echo $val['productoId'] ?>"
                 />
               </div>
 
               <div class="mb-1 col-12">
-                <label for="direccion" class="form-label texcolor3">Stock</label>
+                <label for="direfechaccion" class="form-label texcolor3">Cantidad</label>
                 <input 
                   type="number"
-                  id="stock"
-                  name="stock"
+                  id="fecha"
+                  name="fecha"
                   class="form-control"  
-                  value="<?php echo $val['stock'] ?>"
+                  value="<?php echo $val['cantidad'] ?>"
                 />
               </div>
 
               <div class="mb-1 col-12">
-                <label for="direccion" class="form-label texcolor3">Unidades pedidas</label>
+                <label for="direfechaccion" class="form-label texcolor3">Precio Venta</label>
                 <input 
                   type="number"
-                  id="unidadesPedidas"
-                  name="unidadesPedidas"
+                  id="fecha"
+                  name="fecha"
                   class="form-control"  
-                  value="<?php echo $val['unidadesPedidas'] ?>"
-                />
-              </div>
-
-              <div class="mb-1 col-12">
-                <label for="direccion" class="form-label texcolor3">Proveedor ID</label>
-                <input 
-                  type="number"
-                  id="proveedorId"
-                  name="proveedorId"
-                  class="form-control"  
-                  value="<?php echo $val['proveedorId'] ?>"
-                />
-              </div>
-
-              <div class="mb-1 col-12">
-                <label for="direccion" class="form-label texcolor3">Descontinuado</label>
-                <input 
-                  type="text"
-                  id="descontinuado"
-                  name="descontinuado"
-                  class="form-control"  
-                  value="<?php echo $val['descontinuado'] ?>"
-                />
-              </div>
-
-              <div class="mb-1 col-12">
-                <label for="direccion" class="form-label texcolor3">Nombre</label>
-                <input 
-                  type="text"
-                  id="nombre"
-                  name="nombre"
-                  class="form-control"  
-                  value="<?php echo $val['nombre'] ?>"
+                  value="<?php echo $val['precioVenta'] ?>"
                 />
               </div>
 

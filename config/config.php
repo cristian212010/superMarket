@@ -1,19 +1,19 @@
 <?php
-require_once("db.php");
+require_once("Conectar.php");
+$data = new Conectar();
 
-class Categoria{
+class Categoria extends Conectar{
     private $categoriaId;
     private $nombre;
     private $descripcion;
     private $imagen;
-    protected $dbCnx;
 
-    public function __construct($categoriaId=0, $nombres='', $descripcion='', $imagen=''){
+    public function __construct($categoriaId=0, $nombre='', $descripcion='', $imagen='', $dbCnx = ''){
         $this->categoriaId = $categoriaId;
-        $this->nombres = $nombres;
+        $this->nombre = $nombre;
         $this->descripcion = $descripcion;
         $this->imagen = $imagen;
-        $this->dbCnx = new PDO(DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PWD, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+        parent::__construct($dbCnx);
     }
 
     public function setcategoriaId($categoriaId){
@@ -98,7 +98,7 @@ class Categoria{
     }
 }
 
-class Producto{
+class Producto extends Conectar{
 
     private $productoId;
     private $categoriaId;
@@ -108,9 +108,8 @@ class Producto{
     private $proveedorId;
     private $descontinuado;
     private $nombre;
-    protected $dbCnx;
 
-    public function __construct($productoId=0, $categoriaId=0, $precioUnitario=0, $stock=0, $unidadesPedidas=0, $proveedorId=0, $descontinuado='', $nombre=''){
+    public function __construct($productoId=0, $categoriaId=0, $precioUnitario=0, $stock=0, $unidadesPedidas=0, $proveedorId=0, $descontinuado='', $nombre='', $dbCnx=''){
         $this->productoId = $productoId;
         $this->categoriaId = $categoriaId;
         $this->precioUnitario = $precioUnitario;
@@ -119,7 +118,7 @@ class Producto{
         $this->proveedorId = $proveedorId;
         $this->descontinuado = $descontinuado;
         $this->nombre = $nombre;
-        $this->dbCnx = new PDO(DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PWD, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+        parent::__construct($dbCnx);
     }
 
     public function setProductoId($productoId){
@@ -260,20 +259,41 @@ class Producto{
             return $e->getMessage();
         }
     }
+
+    public function selectCategorias(){
+        try {
+            $stm = $this->dbCnx -> prepare("SELECT categoriaId, nombre FROM categorias");
+            $stm -> execute();
+            return $stm -> fetchAll();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function selectProveedores(){
+        try {
+            $stm = $this->dbCnx -> prepare("SELECT proveedorId, nombre FROM proveedores");
+            $stm -> execute();
+            return $stm -> fetchAll();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }
 
-class Cliente{
+class Cliente extends Conectar{
 
     private $clienteId;
+    private $nombre;
     private $celular;
     private $compañia;
-    protected $dbCnx;
 
-    public function __construct($clienteId = 0, $celular = 0, $compañia = ""){
+    public function __construct($clienteId = 0, $nombre='', $celular = 0, $compañia = "", $dbCnx=''){
         $this->clienteId = $clienteId;
+        $this->nombre = $nombre;
         $this->celular = $celular;
         $this->compañia = $compañia;
-        $this->dbCnx = new PDO(DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PWD, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+        parent::__construct($dbCnx);
     }
 
     public function setClienteId($clienteId){
@@ -282,6 +302,14 @@ class Cliente{
 
     public function getClienteId(){
         return $this->clienteId;
+    }
+
+    public function setNombre($nombre){
+        $this->nombre = $nombre;
+    }
+
+    public function getNombre(){
+        return $this->nombre;
     }
 
     public function setCelular($celular){
@@ -302,8 +330,8 @@ class Cliente{
 
     public function insertData(){
         try {
-            $stm = $this->dbCnx->prepare("INSERT INTO clientes(celular, compañia) VALUES(?,?)");
-            $stm->execute([$this->celular, $this->compañia]);
+            $stm = $this->dbCnx->prepare("INSERT INTO clientes(nombre, celular, compañia) VALUES(?,?,?)");
+            $stm->execute([$this->nombre, $this->celular, $this->compañia]);
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -342,8 +370,8 @@ class Cliente{
 
     public function update(){
         try {
-            $stm = $this->dbCnx -> prepare("UPDATE clientes SET celular=?, compañia=? WHERE clienteId=?");
-            $stm -> execute([$this->celular, $this->compañia, $this->clienteId]);
+            $stm = $this->dbCnx -> prepare("UPDATE clientes SET nombre=?, celular=?, compañia=? WHERE clienteId=?");
+            $stm -> execute([$this->nombre, $this->celular, $this->compañia, $this->clienteId]);
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -351,20 +379,19 @@ class Cliente{
 
 }
 
-class Empleado{
+class Empleado extends Conectar{
 
     private $empleadoId;
     private $nombre;
     private $celular;
     private $direccion;
-    protected $dbCnx;
-
-    public function __construct($empleadoId = 0, $nombre = "", $celular = 0, $direccion = ""){
+    
+    public function __construct($empleadoId = 0, $nombre = "", $celular = 0, $direccion = "", $dbCnx=''){
         $this->empleadoId = $empleadoId;
         $this->nombre = $nombre;
         $this->celular = $celular;
         $this->direccion = $direccion;
-        $this-> dbCnx = new PDO(DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME,DB_USER,DB_PWD,[PDO::ATTR_DEFAULT_FETCH_MODE => PDO:: FETCH_ASSOC]);
+        parent::__construct($dbCnx);
     }
 
     public function setEmpleadoId($empleadoId){
@@ -450,20 +477,19 @@ class Empleado{
 
 }
 
-class Factura{
+class Factura extends Conectar{
 
     private $facturaId;
     private $empleadoId;
     private $clienteId;
     private $fecha;
-    protected $dbCnx;
 
-    public function __construct($facturaId = 0, $empleadoId = 0, $clienteId = 0, $fecha = ""){
+    public function __construct($facturaId = 0, $empleadoId = 0, $clienteId = 0, $fecha = "", $dbCnx=''){
         $this->facturaId = $facturaId;
         $this->empleadoId = $empleadoId;
         $this->clienteId = $clienteId;
         $this->fecha = $fecha;
-        $this-> dbCnx = new PDO(DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME,DB_USER,DB_PWD,[PDO::ATTR_DEFAULT_FETCH_MODE => PDO:: FETCH_ASSOC]);
+        parent::__construct($dbCnx);
     }
 
     public function setFacturaId($facturaId){
@@ -547,11 +573,11 @@ class Factura{
         }
     }
 
-    public function selectEmpleado($empleadoId){
+    public function selectNombreEmpleado($empleadoId){
         try {
             $stm = $this->dbCnx -> prepare("SELECT empleados.nombre
             FROM empleados
-                INNER JOIN facturas ON empleados.empleadoId = facturas.empleadoId;
+            INNER JOIN facturas ON empleados.empleadoId = facturas.empleadoId
             WHERE facturas.empleadoId = ?");
             $stm -> execute([$empleadoId]);
             return $stm->fetchColumn();
@@ -560,22 +586,62 @@ class Factura{
         }
     }
 
+    public function selectEmpleados(){
+        try {
+            $stm = $this->dbCnx -> prepare("SELECT empleadoId, nombre FROM empleados");
+            $stm -> execute();
+            return $stm -> fetchAll();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function selectClientes(){
+        try {
+            $stm = $this->dbCnx -> prepare("SELECT clienteId, nombre FROM clientes");
+            $stm -> execute();
+            return $stm -> fetchAll();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function selectProductos(){
+        try {
+            $stm = $this->dbCnx -> prepare("SELECT productoId, nombre FROM productos");
+            $stm -> execute();
+            return $stm -> fetchAll();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+    
+    public function ultimoId(){
+        try {
+            $stm = $this->dbCnx -> prepare("SELECT MAX(facturaId) AS ultimoId FROM facturas");
+            $stm -> execute();
+            $resultado = $stm->fetch(PDO::FETCH_ASSOC);
+            return $resultado['ultimoId'] ?? 0;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
 }
 
-class Proveedor{
+class Proveedor extends Conectar{
 
     private $proveedorId;
     private $nombre;
     private $telefono;
     private $ciudad;
-    protected $dbCnx;
 
-    public function __construct($proveedorId = 0, $nombre = "", $telefono = 0, $ciudad = ""){
+    public function __construct($proveedorId = 0, $nombre = "", $telefono = 0, $ciudad = "", $dbCnx=''){
         $this->proveedorId = $proveedorId;
         $this->nombre = $nombre;
         $this->telefono = $telefono;
         $this->ciudad = $ciudad;
-        $this-> dbCnx = new PDO(DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME,DB_USER,DB_PWD,[PDO::ATTR_DEFAULT_FETCH_MODE => PDO:: FETCH_ASSOC]);
+        parent::__construct($dbCnx);
     }
 
     public function setProveedorId($proveedorId){
@@ -661,20 +727,19 @@ class Proveedor{
 
 }
 
-class FacturaDetalle{
+class FacturaDetalle extends Conectar{
 
     private $productoId;
     private $facturaId;
     private $cantidad;
     private $precioVenta;
-    protected $dbCnx;
 
-    public function __construct($productoId = 0, $facturaId = "", $cantidad = "", $precioVenta = ""){
+    public function __construct($productoId = 0, $facturaId = 0, $cantidad = "", $precioVenta = "", $dbCnx=''){
         $this->productoId = $productoId;
         $this->facturaId = $facturaId;
         $this->cantidad = $cantidad;
         $this->precioVenta = $precioVenta;
-        $this-> dbCnx = new PDO(DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME,DB_USER,DB_PWD,[PDO::ATTR_DEFAULT_FETCH_MODE => PDO:: FETCH_ASSOC]);
+        parent::__construct($dbCnx);
     }
 
     public function setProductoId($productoId){
@@ -711,7 +776,7 @@ class FacturaDetalle{
 
     public function insertData(){
         try {
-            $stm = $this->dbCnx->prepare("INSERT INTO facturadetalle(productoId, facturaId, cantidad, precioVenta) VALUES(?,?,?,?)");
+            $stm = $this->dbCnx->prepare("INSERT INTO facturaDetalle(productoId, facturaId, cantidad, precioVenta) VALUES(?,?,?,?)");
             $stm->execute([$this->productoId, $this->facturaId, $this->cantidad, $this->precioVenta]);
         } catch (Exception $e) {
             return $e->getMessage();
@@ -730,8 +795,8 @@ class FacturaDetalle{
 
     public function delete(){
         try {
-            $stm = $this->dbCnx -> prepare("DELETE FROM facturadetalle WHERE productoId=?");
-            $stm -> execute([$this->productoId]);
+            $stm = $this->dbCnx -> prepare("DELETE FROM facturadetalle WHERE facturaId=?");
+            $stm -> execute([$this->facturaId]);
             return $stm->fetchAll();
             echo "<script>alert('Borrado exitosamente');document.location='estudiantes.php'</script>";
         } catch (Exception $e) {
@@ -741,8 +806,8 @@ class FacturaDetalle{
 
     public function selectOne(){
         try {
-            $stm = $this->dbCnx -> prepare("SELECT * FROM facturadetalle WHERE productoId=?");
-            $stm -> execute([$this->productoId]);
+            $stm = $this->dbCnx -> prepare("SELECT * FROM facturadetalle WHERE facturaId=?");
+            $stm -> execute([$this->facturaId]);
             return $stm->fetchAll();
         } catch (Exception $e) {
             return $e->getMessage();
@@ -751,8 +816,130 @@ class FacturaDetalle{
 
     public function update(){
         try {
-            $stm = $this->dbCnx -> prepare("UPDATE facturadetalle SET nombre=?, telefono=?, ciudad=? WHERE productoId=?");
-            $stm -> execute([$this->nombre , $this->telefono, $this->ciudad, $this->productoId]);
+            $stm = $this->dbCnx -> prepare("UPDATE facturadetalle SET nombre=?, telefono=?, ciudad=? WHERE facturaId=?");
+            $stm -> execute([$this->nombre , $this->telefono, $this->ciudad, $this->facturaId]);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function nombreProducto($productoId){
+        try {
+            $stm = $this->dbCnx -> prepare("SELECT productos.nombre
+            FROM productos
+            INNER JOIN facturaDetalle ON productos.productoId = facturaDetalle.productoId
+            WHERE productos.productoId = ?");
+            $stm -> execute([$productoId]);
+            return $stm->fetchColumn();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+}
+
+class Usuario extends Conectar{
+    private $id;
+    private $empleadoId;
+    private $email;
+    private $username;
+    private $password;
+    private $tipoUsuario;
+    public function __construct($id=0,$empleadoId=0,$email="",$username="",$password="", $tipoUsuario="",$dbCnx="")
+    {
+        $this->id=$id;
+        $this->empleadoId =$empleadoId;
+        $this->email=$email;
+        $this->username=$username;
+        $this->password=$password;
+        $this->tipoUsuario=$tipoUsuario;
+        parent::__construct($dbCnx);
+    }
+
+    public function setID($id)
+    {
+        $this->id=$id;
+    }
+
+    public function getID()
+    {
+        return $this->id;
+    }
+
+    public function setEmpleadoId($empleadoId)
+    {
+        $this->empleadoId=$empleadoId;
+    }
+
+    public function getEmpleadoId()
+    {
+        return $this->empleadoId;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email=$email;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username=$username;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password=$password;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function setTipoUsuario($tipoUsuario)
+    {
+        $this->tipoUsuario=$tipoUsuario;
+    }
+
+    public function getTipoUsuario()
+    {
+        return $this->tipoUsuario;
+    }
+
+    public function insertData(){
+        try {
+            $stm = $this-> dbCnx-> prepare("INSERT INTO usuarios(empleadoId,email,username,password,tipoUsuario) values(?,?,?,?,?)");
+            $stm -> execute([$this->empleadoId,$this->email,$this->username,md5($this->password), $this->tipoUsuario]);
+        } catch (Excption $e) {
+            return $e ->getMessage();
+        }
+    }
+
+    public function selectEmpleados(){
+        try {
+            $stm = $this->dbCnx -> prepare("SELECT empleadoId, nombre FROM empleados");
+            $stm -> execute();
+            return $stm -> fetchAll();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function verificacion(){
+        try {
+            $stm = $this->dbCnx -> prepare("SELECT id,username, password, tipoUsuario FROM usuarios");
+            $stm -> execute();
+            return $stm -> fetchAll();
         } catch (Exception $e) {
             return $e->getMessage();
         }
