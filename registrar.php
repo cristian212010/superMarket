@@ -108,4 +108,18 @@ if (isset($_POST["registrarse"])) {
 
     echo "<script> alert('El registro se realizo satisfactoriamente');document.location ='Login/loginRegister.php'</script>";
 }
+if (isset($_POST["guardarFacturasDetalle"])) {
+    require_once("config/config.php");
+
+    $detalle = new FacturaDetalle();
+
+    $detalle -> setFacturaId($_POST["facturaId"]);
+    $detalle -> setProductoId($_POST["productoIdDetalle"]);
+    $detalle -> setCantidad($_POST["cantidad"]);
+    $detalle -> setPrecioVenta($_POST["precioVenta"]);
+
+    $detalle -> insertData();
+
+    echo "<script> alert('Los datos fueron guardados satisfactoriamente');document.location ='factura/facturas.php'</script>";
+}
 ?>

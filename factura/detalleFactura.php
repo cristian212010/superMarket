@@ -5,9 +5,10 @@ $data = new FacturaDetalle();
 $id = $_GET['id'];
 $data -> setFacturaId($id);
 
-$record = $data->selectOne();
+$record = $data->selectAllDetalle();
 
-$val = $record[0];
+/* $val = $record[0];
+print_r($val); */
 
 if (isset($_POST['editar'])) {
     $data-> setEmpleadoId($_POST['empleadoId']);
@@ -89,18 +90,22 @@ if (isset($_POST['editar'])) {
             </thead>
                   <tbody class="table-group-divider">
                   <?php
-                    $nombreProducto = $data->nombreProducto($val['productoId']);
+                    foreach($record as $key => $value){
+                    $nombreProducto = $data->nombreProducto($value['productoId']);
                   ?>
                   <tr>
-                    <td><?php echo $val['facturaId']?></td>
+                    <td><?php echo $value['facturaId']?></td>
                     <td><?php echo $nombreProducto?></td>
-                    <td><?php echo $val['cantidad']?></td>
-                    <td><?php echo $val['precioVenta']?></td>
+                    <td><?php echo $value['cantidad']?></td>
+                    <td><?php echo $value['precioVenta']?></td>
                     <td>
-                      <a class="btn btn-danger" href="borrarDetalleFactura.php?id=<?=$val['facturaId']?>&req=delete">Borrar</a>
-                      <a class="btn btn-warning" href="editarDetalleFactura.php?id=<?=$val['facturaId']?>">Editar</a>
+                      <a class="btn btn-danger" href="borrarDetalleFactura.php?id=<?=$value['facturaId']?>&req=delete">Borrar</a>
+                      <a class="btn btn-warning" href="editarDetalleFactura.php?id=<?=$value['facturaId']?>">Editar</a>
                     </td>
                   </tr>
+                  <?php
+                    }
+                  ?>
                   </tbody>
           </table>
         </div>  

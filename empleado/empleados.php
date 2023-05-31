@@ -102,6 +102,11 @@ if (isset($_POST['cerrarSesion'])) {
             data-bs-target="#registrarProveedor" href="#" style="cursor:pointer;">Crear Proveedor</a>
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
+            <i class="bi bi-journal-plus text-white"></i>
+            <a class="nav-link texcolor3" type="submit" data-bs-toggle="modal"
+            data-bs-target="#registrarDetalle" href="#" style="cursor:pointer;">Crear Detalle Factura</a>
+          </li>
+          <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <form method="post" action="">
               <input type="submit" class="btn btn-light" value="Cerrar Sesión" name="cerrarSesion"/>
             </form>
@@ -363,6 +368,57 @@ if (isset($_POST['cerrarSesion'])) {
   </div>
 </div>
 
+<!-- Modal Detalle Factura -->
+<div class="modal fade" id="registrarDetalle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header color1">
+        <h1 class="modal-title fs-5 headerr" id="exampleModalLabel">Registrar nuevo empleado</h1>
+      </div>
+      <div class="modal-body">
+        <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
+          <div class="col-md-12">
+            <label for="facturaId" class="form-label headerr">Factura ID</label>
+            <select class="col-md-12" name="facturaId" id="">
+              <option value="">seleccione factura</option>
+              <?php
+                $allFacturas = $facturas->selectIdFactura();
+                foreach ($allFacturas as $allFacturas) {
+                  $facturaId = $allFacturas['facturaId'];
+                  echo "<option value='" . intval($facturaId) . "'>$facturaId</option>";
+                }
+              ?>
+            </select>
+          </div>
+          <div class="col-md-12">
+            <label for="productoIdDetalle" class="form-label headerr">Producto ID</label>
+            <select class="col-md-12" name="productoIdDetalle" id="">
+              <option value="">seleccione producto</option>
+              <?php
+                $allDetalleProductos = $facturas->selectProductos();
+                foreach ($allDetalleProductos as $allDetalleProductos) {
+                  $productoIdDetalle = $allDetalleProductos['productoId'];
+                  $productoNombreDetalle = $allDetalleProductos['nombre'];
+                  echo "<option value='" . intval($productoIdDetalle) . "'>$productoNombreDetalle</option>";
+                }
+              ?>
+            </select>
+          </div>  
+          <div class="col-md-12">
+            <label for="cantidad" class="form-label headerr">Cantidad</label>
+            <input type="number" class="form-control" id="cantidad" name="cantidad">
+          </div>  
+          <div class="col-md-12">
+            <label for="precioVenta" class="form-label headerr">Precio Venta</label>
+            <input type="number" class="form-control" id="precioVenta" name="precioVenta">
+          </div>  
+      </div>
+      <div class="modal-footer ">
+        <input type="submit" class="btn btn-primary" value="guardar" name="guardarFacturasDetalle"/>
+      </div>
+    </div>
+  </div>
+</div>
 
   <!-- //////////////////////////////////////Campers Dynamic Table-->
   <div  class="div2 alertaAlerta" style="background-color: #233249;">

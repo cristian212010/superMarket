@@ -143,3 +143,7 @@ FROM productos
     INNER JOIN facturaDetalle ON productos.productoId = facturaDetalle.productoId
 WHERE
     productos.productoId = 20 ;
+
+SELECT facturaId FROM facturas;
+
+SELECT * FROM facturadetalle WHERE facturaId=11

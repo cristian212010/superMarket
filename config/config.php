@@ -606,6 +606,16 @@ class Factura extends Conectar{
         }
     }
 
+    public function selectIdFactura(){
+        try {
+            $stm = $this->dbCnx -> prepare("SELECT facturaId FROM facturas");
+            $stm -> execute();
+            return $stm -> fetchAll();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     public function selectProductos(){
         try {
             $stm = $this->dbCnx -> prepare("SELECT productoId, nombre FROM productos");
@@ -787,6 +797,16 @@ class FacturaDetalle extends Conectar{
         try {
             $stm = $this->dbCnx -> prepare("SELECT * FROM facturadetalle");
             $stm -> execute();
+            return $stm -> fetchAll();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function selectAllDetalle(){
+        try {
+            $stm = $this->dbCnx -> prepare("SELECT * FROM facturadetalle WHERE facturaId=?");
+            $stm -> execute([$this->facturaId]);
             return $stm -> fetchAll();
         } catch (Exception $e) {
             return $e->getMessage();
