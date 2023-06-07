@@ -1,5 +1,5 @@
 <?php
-require_once("../config/config.php");
+require_once("Proveedor.php");
 $data = new Proveedor();
 
 $id = $_GET['id'];

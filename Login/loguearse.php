@@ -1,23 +1,20 @@
 <?php
-if (isset($_POST["loguearse"])) {
-    require_once("../config/config.php");
+session_start();
 
-    $data = new Usuario();
+if (isset($_POST['loguearse'])) {
+    require_once("LoginUser.php");
 
-    $usuarios = $data->verificacion();
-    $coincidencia = false;
-    foreach ($usuarios as $usuarioValidar) {
-        if ($usuarioValidar['username'] == $_POST['username'] && $usuarioValidar['password'] == md5($_POST['password'])) {
-            $coincidencia = true;
-            session_start();
-            $_SESSION['id'] = $usuarioValidar['id'];
-            $_SESSION['tipoUsuario'] = $usuarioValidar['tipoUsuario'];
-            header('Location: ../categoria/index.php');
-            exit();
-        }
-    }
-    if (!$coincidencia) {
-        echo "<script>alert('Usuario o contraseña incorrectos');document.location ='loginRegister.php'</script>";
+    $credenciales = new LoginUser();
+
+    $credenciales->setEmail($_POST['email']);
+    $credenciales->setPassword($_POST['password']);
+
+    $login = $credenciales->login();
+
+    if ($login) {
+        header('Location: ../categoria/categorias.php');
+    }else {
+        echo "<script>alert('password/email invalidos');document.location='loginRegister.php'</script>";
     }
 }
 ?>

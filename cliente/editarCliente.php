@@ -1,5 +1,5 @@
 <?php
-require_once('../config/config.php');
+require_once("Cliente.php");
 $data = new Cliente();
 
 $id = $_GET['id'];

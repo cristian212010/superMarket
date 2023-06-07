@@ -1,5 +1,7 @@
 <?php
-require_once("../config/config.php");
+require_once("Empleado.php");
+require_once("../producto/Producto.php");
+require_once("../factura/Factura.php");
 
 $data = new Empleado();
 $all = $data->selectAll();
@@ -12,13 +14,13 @@ $facturas = new Factura();
 
 session_start();
 //verificacion
-if (!$_SESSION['id']) {
+if (!$_SESSION['email']) {
   header('Location: ../Login/loginRegister.php');
   exit();
 }
 //Cerrar sesion
 if (isset($_POST['cerrarSesion'])) {
-  unset($_SESSION['id']);
+  unset($_SESSION['email']);
   header('Location: ../Login/loginRegister.php');
   exit();
 }
@@ -49,7 +51,7 @@ if (isset($_POST['cerrarSesion'])) {
       <ul class="navbar-nav  mb-2 mb-lg-0 d-flex justify-content-start ">
       <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-person-square text-white"></i>
-            <a class="nav-link active texcolor3" aria-current="page" href="../categoria/index.php" style="cursor:pointer;">Listar Categoria</a>
+            <a class="nav-link active texcolor3" aria-current="page" href="../categoria/categorias.php" style="cursor:pointer;">Listar Categoria</a>
           </li>
           <li class="nav-item  d-flex gap-3 " style="display:flex; align-items: center;">
             <i class="bi bi-journal-plus text-white"></i>
@@ -128,7 +130,7 @@ if (isset($_POST['cerrarSesion'])) {
         <h1 class="modal-title fs-5 headerr" id="exampleModalLabel">Registrar nueva categoria</h1>
       </div>
       <div class="modal-body">
-        <form id="formulario" class="row g-3" action="../registrar.php"  method="POST">
+        <form id="formularioCategoria" class="row g-3" action="../categoria/registrarCategoria.php"  method="POST">
           <div class="col-md-12">
             <label for="nombre" class="form-label headerr">Nombre</label>
             <input type="text" class="form-control" id="nombre" name="nombre1">
@@ -136,24 +138,25 @@ if (isset($_POST['cerrarSesion'])) {
           <div class="col-md-12">
             <label for="descripcion" class="form-label headerr">Descripcion</label>
             <input type="text" class="form-control" id="descripcion" name="descripcion">
-          </div>      
-      </div>
-      <div class="modal-footer ">
-        <input type="submit" class="btn btn-primary" value="guardar" name="guardar"/>
-      </div>
+          </div>     
+          </div>
+          <div class="modal-footer ">
+            <input type="submit" class="btn btn-primary" value="guardar" name="guardar"/>
+          </div>
+        </form> 
     </div>
   </div>
 </div>
 
 <!-- Modal Prodcutos-->
-<div class="modal fade" id="registrarProdcuto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="registrarProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header color1">
         <h1 class="modal-title fs-5 headerr" id="exampleModalLabel">Registrar nuevo Producto</h1>
       </div>
       <div class="modal-body">
-        <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
+        <form id="formularioProductos" class="row g-3" action="../producto/registrarProducto.php"  method="POST">
           <div class="col-md-12">
             <label for="categoriaId" class="form-label headerr">Categoria ID</label>
             <select class="col-md-12" name="categoriaId" id="">
@@ -202,10 +205,11 @@ if (isset($_POST['cerrarSesion'])) {
             <label for="nombre" class="form-label headerr">Nombre</label>
             <input type="text" class="form-control" id="nombre" name="nombre2">
           </div>      
-      </div>
-      <div class="modal-footer ">
-        <input type="submit" class="btn btn-primary" value="guardar" name="guardarProducto"/>
-      </div>
+          </div>
+          <div class="modal-footer ">
+            <input type="submit" class="btn btn-primary" value="guardar" name="guardarProducto"/>
+          </div>
+        </form> 
     </div>
   </div>
 </div>
@@ -215,10 +219,10 @@ if (isset($_POST['cerrarSesion'])) {
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header color1">
-        <h1 class="modal-title fs-5 headerr" id="exampleModalLabel">Registrar nuevpo cliente</h1>
+        <h1 class="modal-title fs-5 headerr" id="exampleModalLabel">Registrar nuevo cliente</h1>
       </div>
       <div class="modal-body">
-        <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
+        <form id="formularioClientes" class="row g-3" action="../cliente/registrarCliente.php"  method="POST">
           <div class="col-md-12">
             <label for="nombre5" class="form-label headerr">Nombre</label>
             <input type="text" class="form-control" id="nombre5" name="nombre5">
@@ -231,10 +235,11 @@ if (isset($_POST['cerrarSesion'])) {
             <label for="compañia" class="form-label headerr">Compañia</label>
             <input type="text" class="form-control" id="compañia" name="compañia">
           </div>     
-      </div>
-      <div class="modal-footer ">
-        <input type="submit" class="btn btn-primary" value="guardar" name="guardarClientes"/>
-      </div>
+          </div>
+          <div class="modal-footer ">
+            <input type="submit" class="btn btn-primary" value="guardar" name="guardarClientes"/>
+          </div>
+        </form> 
     </div>
   </div>
 </div>
@@ -247,8 +252,8 @@ if (isset($_POST['cerrarSesion'])) {
         <h1 class="modal-title fs-5 headerr" id="exampleModalLabel">Registrar nuevo empleado</h1>
       </div>
       <div class="modal-body">
-        <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
-        <div class="col-md-12">
+        <form id="formularioEmpleados" class="row g-3" action="registrarEmpleado.php"  method="POST">
+          <div class="col-md-12">
             <label for="nombre" class="form-label headerr">Nombre</label>
             <input type="text" class="form-control" id="nombre" name="nombre3">
           </div> 
@@ -260,10 +265,11 @@ if (isset($_POST['cerrarSesion'])) {
             <label for="direccion" class="form-label headerr">Direccion</label>
             <input type="text" class="form-control" id="direccion" name="direccion">
           </div>     
-      </div>
-      <div class="modal-footer ">
-        <input type="submit" class="btn btn-primary" value="guardar" name="guardarEmpleados"/>
-      </div>
+          </div>
+          <div class="modal-footer ">
+            <input type="submit" class="btn btn-primary" value="guardar" name="guardarEmpleados"/>
+          </div>
+        </form> 
     </div>
   </div>
 </div>
@@ -273,10 +279,10 @@ if (isset($_POST['cerrarSesion'])) {
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header color1">
-        <h1 class="modal-title fs-5 headerr" id="exampleModalLabel">Registrar nuevo empleado</h1>
+        <h1 class="modal-title fs-5 headerr" id="exampleModalLabel">Registrar nueva Factura</h1>
       </div>
       <div class="modal-body">
-        <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
+        <form id="formularioFacturas" class="row g-3" action="../factura/registrarFactura.php"  method="POST">
           <div class="col-md-12">
             <label for="empleadoId" class="form-label headerr">Empleado ID</label>
             <select class="col-md-12" name="empleadoId" id="">
@@ -331,10 +337,11 @@ if (isset($_POST['cerrarSesion'])) {
             <label for="precioVenta" class="form-label headerr">Precio Venta</label>
             <input type="number" class="form-control" id="precioVenta" name="precioVenta">
           </div>  
-      </div>
-      <div class="modal-footer ">
-        <input type="submit" class="btn btn-primary" value="guardar" name="guardarFacturas"/>
-      </div>
+          </div>
+          <div class="modal-footer ">
+            <input type="submit" class="btn btn-primary" value="guardar" name="guardarFacturas"/>
+          </div>
+        </form> 
     </div>
   </div>
 </div>
@@ -347,7 +354,7 @@ if (isset($_POST['cerrarSesion'])) {
         <h1 class="modal-title fs-5 headerr" id="exampleModalLabel">Registrar nuevo proveedor</h1>
       </div>
       <div class="modal-body">
-        <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
+        <form id="formularioProveedores" class="row g-3" action="../proveedor/registrarProveedor.php"  method="POST">
           <div class="col-md-12">
             <label for="nombre" class="form-label headerr">Nombre</label>
             <input type="text" class="form-control" id="clinombreenteId" name="nombre4">
@@ -360,10 +367,11 @@ if (isset($_POST['cerrarSesion'])) {
             <label for="ciudad" class="form-label headerr">Ciudad</label>
             <input type="text" class="form-control" id="ciudad" name="ciudad">
           </div>     
-      </div>
-      <div class="modal-footer ">
-        <input type="submit" class="btn btn-primary" value="guardar" name="guardarProveedor"/>
-      </div>
+          </div>
+          <div class="modal-footer ">
+            <input type="submit" class="btn btn-primary" value="guardar" name="guardarProveedor"/>
+          </div>
+        </form> 
     </div>
   </div>
 </div>
@@ -373,10 +381,10 @@ if (isset($_POST['cerrarSesion'])) {
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header color1">
-        <h1 class="modal-title fs-5 headerr" id="exampleModalLabel">Registrar nuevo empleado</h1>
+        <h1 class="modal-title fs-5 headerr" id="exampleModalLabel">Registrar nuevo detalle</h1>
       </div>
       <div class="modal-body">
-        <form id="formulario" class="row g-3" action="registrar.php"  method="POST">
+        <form id="formularioDetallesFacturas" class="row g-3" action="../factura/registrarDetalleFactura.php"  method="POST">
           <div class="col-md-12">
             <label for="facturaId" class="form-label headerr">Factura ID</label>
             <select class="col-md-12" name="facturaId" id="">
@@ -412,15 +420,16 @@ if (isset($_POST['cerrarSesion'])) {
             <label for="precioVenta" class="form-label headerr">Precio Venta</label>
             <input type="number" class="form-control" id="precioVenta" name="precioVenta">
           </div>  
-      </div>
-      <div class="modal-footer ">
-        <input type="submit" class="btn btn-primary" value="guardar" name="guardarFacturasDetalle"/>
-      </div>
+          </div>
+          <div class="modal-footer ">
+            <input type="submit" class="btn btn-primary" value="guardar" name="guardarFacturasDetalle"/>
+          </div>
+        </form>
     </div>
   </div>
 </div>
 
-  <!-- //////////////////////////////////////Campers Dynamic Table-->
+  <!-- ////////////////////////////////////// Dynamic Table-->
   <div  class="div2 alertaAlerta" style="background-color: #233249;">
     <div class="sub-menu d-flex justify-content-between menu-cuenta " >
 

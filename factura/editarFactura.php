@@ -1,5 +1,5 @@
 <?php
-require_once("../config/config.php");
+require_once("Factura.php");
 $data = new Factura();
 
 $id = $_GET['id'];

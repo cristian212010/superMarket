@@ -1,8 +1,9 @@
 <?php
-require_once("../config/config.php");
+require_once("RegistroUser.php");
 
-$data = new Usuario();
+$data = new RegistroUser();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,28 +27,28 @@ $data = new Usuario();
             <img src="img/camper.png" alt="" class="logo"></div>
             <div class="d-flex justify-content-center align-items-center"><h1 style="font-weight: 800;">BIENVENIDOS</h1></div>
             <div  class="d-flex justify-content-center align-items-center" >
-            <form action = "loguearse.php" method = "POST"> 
+                <form action="loguearse.php" method="post">
                     <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
+                    <label for="email" class="form-label">Email</label>
                         <input 
                           type="text"
-                          id="username"
-                          name="username"
+                          id="email"
+                          name="email"
                           class="form-control"  
                         />
                       <div id="emailHelp" class="form-text">Mañana es una excusa maravillosa, ¿No crees?</div>
                     </div>
                     <div class="mb-3">
-                    <label for="password" class="form-label">password</label>
+                    <label for="password" class="form-label">Password</label>
                         <input 
-                          type="password"
+                          type="text"
                           id="password"
                           name="password"
                           class="form-control"  
                         />
                     </div>
                  
-                    <input type="submit" value="loguearse" name="loguearse" class="btn btn-primary">
+                    <input type="submit" class="btn btn-primary" value="loguearse" name="loguearse"></input>
                   </form>
                   
 
@@ -61,14 +62,15 @@ $data = new Usuario();
         </div>
         <div class="section2" id="section2">
              <div class="d-flex justify-content-star " >
-                <h1 style="font-weight: 800;font-size:larger;"> Nuevo</h1></div>
+                <h1 style="font-weight: 800;font-size:larger;"> Nuevo registro</h1></div>
                 <p style="font-style: italic;">"cuando enseñar es un arte aprender es un placer"</p>
           
                 
              <div  class="d-flex justify-content-center align-items-center" >
                 
-             <form action= "../registrar.php" method = "POST">
+                <form action="registrarse.php" method="post">
                     <h1 class="m-5" style="font-weight: 800;">REGISTRAR USUARIO</h1>
+                    <div class="mb-3">
                     <div class="mb-3">
                         <label for="empleadoId" class="form-label">Empleado</label>
                         <select name="empleadoId" id="">
@@ -91,38 +93,35 @@ $data = new Usuario();
                           <option value="estandar">Estandar</option>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
+                      <label for="email" class="form-label">Email</label>
                         <input 
                           type="text"
                           id="email"
                           name="email"
                           class="form-control"  
                         />
-                      </div>
-                    <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
+                        <label for="username" class="form-label">Username</label>
                         <input 
                           type="text"
                           id="username"
                           name="username"
                           class="form-control"  
                         />
-                    </div>
+                      </div>
                     <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                         <input 
-                          type="password"
+                          type="text"
                           id="password"
                           name="password"
                           class="form-control"  
                         />
                     </div>
-                    <input type="submit" class="btn btn-primary" value="Registrarse" name="registrarse">
+                    <div class="mb-3">
+                    <input type="submit" class="btn btn-primary" value="registrarse" name="registrarse"></input>
                   </form>
 
             </div>
-            <div class="d-flex justify-content-center align-items-end m-5"><img src="img/Diseño sin título (1).png" alt="" style="width: 50%; height: 10%; object-fit: cover;" ></div>
                   
 
 

@@ -14,7 +14,8 @@ CREATE TABLE
     clientes(
         clienteId INT PRIMARY KEY AUTO_INCREMENT,
         celular VARCHAR(20),
-        compañia VARCHAR(50)
+        compañia VARCHAR(50),
+        nombre VARCHAR(30)
     );
 
 CREATE TABLE
@@ -53,6 +54,7 @@ CREATE TABLE
         unidadesPedidas INT,
         proveedorId INT,
         descontinuado VARCHAR(50),
+        nombre VARCHAR(50),
         Foreign Key (categoriaId) REFERENCES categorias(categoriaId),
         Foreign Key (proveedorId) REFERENCES proveedores(proveedorId)
     );
@@ -67,62 +69,6 @@ CREATE TABLE
         Foreign Key (productoId) REFERENCES productos(productoId)
     );
 
-ALTER TABLE productos ADD nombre VARCHAR(50);
-
-INSERT INTO
-    productos (
-        categoriaId,
-        precioUnitario,
-        stock,
-        unidadesPedidas,
-        proveedorId,
-        descontinuado,
-        nombre
-    )
-values (4, 10000, 35, 5, 1, "no", "bate");
-
-INSERT INTO
-    proveedores (nombre, telefono, ciudad)
-values (
-        "nike",
-        3142353278,
-        "San francisco"
-    );
-
-INSERT INTO
-    clientes (celular, compañia)
-values (3122353278, "Google");
-
-INSERT INTO
-    empleados (nombre, celular, direccion)
-values (
-        "Cristian Luna",
-        3122353278,
-        "Transversal 149"
-    );
-
-INSERT INTO
-    facturas (empleadoId, clienteId, fecha)
-values (1, 1, "28-5-2023");
-
-SELECT categorias.nombre
-FROM categorias
-    INNER JOIN productos ON categorias.categoriaId = productos.categoriaId;
-
-SELECT proveedores.nombre
-FROM proveedores
-    INNER JOIN productos ON proveedores.proveedorId = productos.proveedorId;
-
-SELECT empleados.nombre
-FROM empleados
-    INNER JOIN facturas ON empleados.empleadoId = facturas.empleadoId;
-
-SELECT categoriaId, nombre FROM categorias;
-
-ALTER TABLE clientes ADD nombre VARCHAR(30);
-
-SELECT clienteId, nombre FROM clientes;
-
 CREATE TABLE
     usuarios(
         id INT PRIMARY KEY AUTO_INCREMENT,
@@ -133,17 +79,3 @@ CREATE TABLE
         tipoUsuario VARCHAR(20) NOT NULL,
         Foreign Key (empleadoId) REFERENCES empleados(empleadoId)
     );
-
-SELECT username, password FROM usuarios;
-
-SELECT MAX(facturaId) AS ultimoId FROM facturas;
-
-SELECT productos.nombre
-FROM productos
-    INNER JOIN facturaDetalle ON productos.productoId = facturaDetalle.productoId
-WHERE
-    productos.productoId = 20 ;
-
-SELECT facturaId FROM facturas;
-
-SELECT * FROM facturadetalle WHERE facturaId=11

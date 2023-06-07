@@ -1,5 +1,5 @@
 <?php
-require_once("../config/config.php");
+require_once("Producto.php");
 $data = new Producto();
 
 $id = $_GET['id'];

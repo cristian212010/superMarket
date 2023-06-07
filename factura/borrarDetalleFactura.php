@@ -1,5 +1,5 @@
 <?php
-require_once("../config/config.php");
+require_once("FacturaDetalle.php");
 $record = new FacturaDetalle();
 
 if (isset($_GET['id']) && isset($_GET['req'])) {
